@@ -124,39 +124,7 @@ function caculate(){
  	 	alert("Address Seems error ,in GithubCoin Wallet APP long press the address tab to copy the address")
  	 }
 }
-
- function toGiteeLogin(){
- 	 Address = getobj("address").value
- 	 if(Address.substr(0,2)=="0x" && Address.length==42){
- 	 	var Github=window.open("./gitee_oauth.php?address="+Address);
- 	 }else{
- 	 	alert("Address Seems error ,in GithubCoin Wallet APP long press the address tab to copy the address")
- 	 }
- }
-
-
- function toGithubLogin2(){
- 	 Address = getobj("address").value
- 	 if(Address.substr(0,2)=="0x" && Address.length==42){
- 	  
- 	 	var Github=window.open("./github_oauth.php?logintype=2&address="+Address);
- 	 }else{
- 	 	alert("Address Seems error ,in GithubCoin Wallet APP long press the address tab to copy the address")
- 	 }
-     
- }
-
-
- function toGithubLogin(){
- 	 Address = getobj("address").value
- 	 if(Address.substr(0,2)=="0x" && Address.length==42){
- 	 	var Github=window.open("./github_oauth.php?address="+Address);
- 	 }else{
- 	 	alert("Address Seems error ,in GithubCoin Wallet APP long press the address tab to copy the address")
- 	 }
-     
- }
-
+ 
 
 function get_wallet() {
 	window.open("http://f.hayoou.com/blogs/entry/GithubCoin-published-for-ervery-github-users-thanks-they-ideas-and-code","_blank")
