@@ -47,7 +47,7 @@ echo "user_public_repos_score:".$user_public_repos_score."<br>";
 if(!$is_fork_check){
 	echo "you are not fork <a href='https://github.com/hayooucom/I_love_GithubCoin'>https://github.com/hayooucom/I_love_GithubCoin</a> abord! clear address setting.<br>";
 
-	$sql = "update user set address='',info='no ownership,try again',try_cnt = try_cnt+1 where username='$username' limit 1";
+	$sql = "update user set address2=address,info='no ownership,try again',try_cnt = try_cnt+1 where username='$username' limit 1";
 	$re = mysqli_query($link,$sql);
 
 	return;
