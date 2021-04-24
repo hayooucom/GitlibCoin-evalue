@@ -116,13 +116,16 @@ $total_score = $user_public_repos_score + $user_followers_score + $user_activity
 //https://zh.numberempire.com/graphingcalculator.php?functions=-0.96%5E(0.0002*x)%2B1&xmin=0&xmax=500000&ymin=-1&ymax=2&var=x
 
 $GTC_reward = (1 - pow(0.96,0.002 * $total_score))*1000000 ;
+if($GTC_reward > 1000000){
+	$GTC_reward = 1000000;
+}
 echo "GTC_reward:".$GTC_reward."<br>";
 
 
 if($_GET['update_GTC...']){
  	$GTC_new = $GTC_reward ;
  	$received  = $GTC_new - $row_user['received'];
- 	echo "Received this time:".$Received."<br>";
+ 	echo "Received this time:".$received."<br>";
 
  	if($received >0){
 	 	$timee = time();
