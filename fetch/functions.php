@@ -201,3 +201,252 @@ function post($post_data)
 	//print_r($output);
 	return $output;
 }
+
+
+function get_repositoriesContributedTo_scroe($user_repositoriesContributedTo){
+  $score1 = 0;
+  $nodes= $user_repositoriesContributedTo->nodes;
+  foreach ($nodes as $key => $repo) {
+      $score2 = 0;
+      $score2 += $repo->watchers->totalCount*5;
+      $score2 += $repo->stargazerCount*3;
+      $score2 += $repo->forkCount*10;
+
+      //-0.993^(0.02*x)+1
+      //https://zh.numberempire.com/graphingcalculator.php?functions=-0.993%5E(0.02*x)%2B1&xmin=0&xmax=50000&ymin=-1&ymax=2&var=x
+      $score_norm = 1 - pow(0.993 ,0.02 * $score2); // [0~1]\
+
+      $score1 += $score_norm;
+  }
+
+  return $score1 * 100 + $user_repositoriesContributedTo->totalCount *10;
+}
+
+
+function get_followers_score_graphQL($user_followers){
+ 
+  $score = 0;
+  $count  =0;
+  $randidx = 0;
+  //print_r($user_followers);
+  $repo_nodes = $user_followers->nodes;
+  foreach ($repo_nodes as $key => $useinfo) {
+
+    $score1 = 0;
+
+    $user_followers_cnt = $useinfo->followers->totalCount;
+    $user_nodes = $useinfo ->repositories->nodes;
+    foreach ($user_nodes as $key1 => $repo) {
+      $score2 = 0;
+      $score2 += $repo->watchers->totalCount*5;
+      $score2 += $repo->stargazerCount*3;
+      $score2 += $repo->forkCount*10;
+
+      //-0.993^(0.02*x)+1
+      //https://zh.numberempire.com/graphingcalculator.php?functions=-0.993%5E(0.02*x)%2B1&xmin=0&xmax=50000&ymin=-1&ymax=2&var=x
+      $score_norm = 1 - pow(0.993 ,0.02 * $score2); // [0~1]\
+
+      $score1 += $score_norm;
+    }
+    //echo "$useinfo->name,score1:$score1,$user_followers_cnt<br>";
+    //$user_obj->nodes->repositories->totalCount *
+    $score += $score1  ;
+  }
+
+  return $score;
+
+}
+
+function get_public_repos_score_graphQL($username,$user_pop_repos){
+  $score = 0;
+  global $is_fork_check;
+  foreach ($user_pop_repos as $key => $repo) {
+    //var_dump($repo);
+    
+    if($repo->name == "I_love_GitlibCoin" ||$repo->name == "I_love_GithubCoin" ||
+      $repo->name == "I_love_GitcatCoin" ||
+      $repo->name == "I_love_GithatCoin" || $repo->name == "GitlibCoin"){
+      $is_fork_check =True;
+      echo "is_owner_check True<br>";
+    }
+
+    //your public repos score = public repos: watch_sum *5 + star_sum *3 + fork_sum *10
+    $score += $repo->watchers->totalCount * 5;
+    $score += $repo->stargazerCount * 3;
+    if(!$repo->isFork){
+      $score += $repo->forkCount * 10;
+      $score += 10;
+      echo "<a href='https://github.com/$username/{$repo->name}'>$repo->name</a>";
+      echo " watchers:{$repo->watchers->totalCount} , stars:{$repo->stargazerCount} ,fork:{$repo->forkCount} ";
+      echo "<br>";
+    }else{
+      //echo " -- is_fork from others <br>";
+    }
+  }
+  return $score;
+}
+function get_user_contribute_graphQL($username,$query){
+
+  $headers = array("Content-Type: application/json",
+    "Authorization: bearer your own privet key",
+    "User-Agent: Mozilla/5.0 (Windows NT 6.1; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/67.0.3396.9");
+  $query =json_encode( array('query' => $query ) );
+  //echo $query;
+  $out = postContents("https://api.github.com/graphql",$query,$headers,60);
+
+  return json_decode($out);
+}
+
+function get_graphQL_query($username){
+$query = <<<QUERYY
+query {
+  user(login: "$username") {
+
+    repositories(first: 100,orderBy: {field: STARGAZERS, direction: DESC}) {
+
+      nodes {
+        name
+        watchers {
+          totalCount
+        }
+        stargazerCount
+        forkCount
+        isFork
+      }
+    }
+
+    followers(first:100){
+      totalCount
+      nodes{
+        name
+        followers{
+          totalCount
+        }
+        repositories(isFork:false,first:100,orderBy:{field: STARGAZERS, direction: DESC}){
+          totalCount
+          nodes{
+            stargazerCount
+            forkCount
+            watchers{
+              totalCount
+            }
+          }
+        }
+      }
+    }
+    repository(name:"I_love_GithubCoin"){
+      id
+    }
+    repositoriesContributedTo(contributionTypes: [COMMIT, PULL_REQUEST, REPOSITORY], last: 100) {
+      totalCount
+      nodes {
+        nameWithOwner
+        watchers{
+          totalCount
+        }
+        stargazerCount
+        forkCount
+      }
+      pageInfo {
+        endCursor
+        hasNextPage
+      }
+    }
+  }
+}
+QUERYY;
+
+return $query;
+}
+function get_graphQL_query_last_followers($username){
+$query = <<<QUERYY
+query {
+  user(login: "$username") {
+
+    followers(last:100){
+      totalCount
+      nodes{
+        name
+        followers{
+          totalCount
+        }
+        repositories(isFork:false,first:100,orderBy:{field: STARGAZERS, direction: DESC}){
+          totalCount
+          nodes{
+            stargazerCount
+            forkCount
+            watchers{
+              totalCount
+            }
+          }
+        }
+      }
+    }
+    
+  }
+}
+QUERYY;
+
+return $query;
+}
+
+/*
+starredRepositories(ownedByViewer:true){
+  totalCount
+}
+topRepositories(orderBy:{field: STARGAZERS, direction: DESC} ){
+  totalCount
+  
+}*/
+function get_graphQL_query1($username){
+$query = <<<QUERYY
+query {
+  user(login: "$username") {
+
+    repositories(isFork: true, first: 100,orderBy: {field: STARGAZERS, direction: DESC}) {
+      nodes {
+        name
+        watchers {
+          totalCount
+        }
+        stargazers {
+          totalCount
+        }
+        forks {
+          totalCount
+        }
+      }
+    }
+     
+  }
+}
+QUERYY;
+
+return $query;
+}
+
+//jdah
+function get_graphQL_query2($username){
+$query = <<<QUERYY
+{
+  user(login: "$username") {
+    followers(first:100){
+      totalCount
+      nodes{
+        name
+        repositories(isFork:false,first:100){
+          totalCount
+        }
+      }
+    }
+    repository(name:"I_love_GithubCoin"){
+      id
+    }
+  }
+    
+}
+
+QUERYY;
+
+return $query;
+}
