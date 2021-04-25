@@ -15,10 +15,18 @@
 	$username = $_GET['username'];
 
 	require dirname(__FILE__).'/db.php';
-	if(isset($username[40]) || strlen($address) !=42 ){
+	echo "calc user value:".$username."<br>";
+	if(!$username || isset($username[40]) || strlen($address) !=42 ){
 		echo "error username or address";
 		exit();
 	}
+	if(strpos($username,"'")!==False || strpos($username,"\"")!==False){
+		echo "you are Dangerous person";
+		exit();
+	}
+	
+	$username=mysqli_real_escape_string($link,$username);
+	$address=mysqli_real_escape_string($link,$address);
 
 	$timenow = time();
 	$sql = "select * from user where username='$username' limit 1";
