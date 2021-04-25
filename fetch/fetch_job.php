@@ -10,7 +10,7 @@
 <?php
     require dirname(__FILE__).'/db.php';
 	$list = scandir(dirname(__FILE__)."/fetch_job/");
-	$_GET['calc_user_score_yes_4596138'] = 1;
+	$_GET['calc_user_api...'] = 1;
 	$_GET['MYSQLlink'] = $link;
 	$count = 0;
 	foreach ($list as $value) {

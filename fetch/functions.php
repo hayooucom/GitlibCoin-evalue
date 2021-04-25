@@ -50,7 +50,7 @@ function get_public_repos_score($user_public_repos){
 	foreach ($user_public_repos as $key => $repo) {
 		//var_dump($repo);
 		//echo $repo->name."<br>";
-		if($repo->name == "I_love_GithubCoin" || $repo->name == "githubcoin"){
+		if($repo->name == "I_love_GitlibCoin" || $repo->name == "GitlibCoin"){
 			$is_fork_check =True;
 			echo "is_fork_check True<br>";
 		}
@@ -259,14 +259,14 @@ function get_followers_score_graphQL($user_followers){
 
 function get_public_repos_score_graphQL($username,$user_pop_repos){
   $score = 0;
-  global $is_fork_check;
+  global $is_owner_check;
   foreach ($user_pop_repos as $key => $repo) {
     //var_dump($repo);
     
     if($repo->name == "I_love_GitlibCoin" ||$repo->name == "I_love_GithubCoin" ||
       $repo->name == "I_love_GitcatCoin" ||
       $repo->name == "I_love_GithatCoin" || $repo->name == "GitlibCoin"){
-      $is_fork_check =True;
+      $is_owner_check =True;
       echo "is_owner_check True<br>";
     }
 
@@ -334,7 +334,7 @@ query {
         }
       }
     }
-    repository(name:"I_love_GithubCoin"){
+    repository(name:"I_love_GitlibCoin"){
       id
     }
     repositoriesContributedTo(contributionTypes: [COMMIT, PULL_REQUEST, REPOSITORY], last: 100) {

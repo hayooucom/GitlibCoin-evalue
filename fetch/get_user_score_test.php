@@ -10,8 +10,7 @@ error_reporting(E_ALL);
 require dirname(__FILE__).'/curl.php';
 
 $username = $_GET['username'];
-$username = "jwyang";
-$username = "youkpan";
+
 echo "calc user value:".$username."<br>";
 
 function get_user_info($user){

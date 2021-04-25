@@ -18,6 +18,7 @@
 		echo "error username or address";
 		exit();
 	}
+	
 	$timenow = time();
 	$sql = "select * from user where username='$username' limit 1";
 	$re = mysqli_query($link,$sql);
@@ -45,13 +46,14 @@
 	}
 
 
-	$_GET['calc_user_score_yes_4596138'] = 1;
+	$_GET['calc_user_api...'] = 1;
 	$_GET['MYSQLlink'] = $link;
 
 	require dirname(__FILE__)."/get_user_score.php";
 
-	echo "your total GTC:".(($total_score)*100)."<br>";
+	echo "your total GTC reward:".($GTC_reward)."<br>";
 
-	echo "your GTC will get this time:".(($total_score)*100 - $row_user['received']);
+	echo "your GTC will get this time:".($GTC_reward - $row_user['received']);
 
+	
 	
