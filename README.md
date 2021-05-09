@@ -3,7 +3,7 @@ Want GitlibCoin for free ?
 
 GitlibCoin is a Cryptocurrency using [ETH blockchain technology](https://github.com/hayooucom/go-ethereum) for every github user. 
 
-You can get 100 ~ 100,000 GitlibCoin for free ,depending on your working in github.
+You can get 100 ~ 1,000,000 GitlibCoin for free ,depending on your working in github.
 
 
 just star and fork this repo ,download wallet(below) and visit:  
@@ -37,7 +37,7 @@ your total_score =  ( (your public repos score) +  (your followers score) + (you
 
 GitlibCoin you can get = (1 - pow(0.96,0.002 * total_score))*1000000 ;
 
-We will store the last time you get GTC. and total GTC received.
+We will store the last time GTC you get. and total GTC received.
 
 Each time caculate will minus total received of your account
 
